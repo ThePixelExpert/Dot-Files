@@ -1,0 +1,22 @@
+{
+  "mcpServers": {
+    "research-agent": {
+      "command": "node",
+      "args": ["/home/logan/.config/github-copilot/agents/research-agent/index.js"],
+      "description": "Web research, information gathering, and summarization with persistent memory",
+      "env": {}
+    },
+    "code-analyzer": {
+      "command": "node",
+      "args": ["/home/logan/.config/github-copilot/agents/code-analyzer/index.js"],
+      "description": "Code analysis, complexity checking, and project scanning with context tracking",
+      "env": {}
+    },
+    "documentation-writer": {
+      "command": "node",
+      "args": ["/home/logan/.config/github-copilot/agents/documentation-writer/index.js"],
+      "description": "Technical documentation generation and markdown formatting with style guides",
+      "env": {}
+    }
+  }
+}

@@ -7,16 +7,32 @@
 # 3. Keeping everything in sync with git
 
 # Configuration
-REPO_DIR="$HOME/home/logan/Projects/Dot-Files"  # Adjust this to your repo location
+REPO_DIR="/home/logan/Projects/Dot-Files"  # Adjust this to your repo location
 DOTFILES=(
     "$HOME/.bashrc"
-    "$HOME/.zshrc"
-    "$HOME/.gitconfig"
-    "$HOME/.vimrc"
-    "$HOME/.tmux.conf"
     "$HOME/.config/nvim"
     "$HOME/.config/alacritty"
-    "$HOME/.config/i3"
+    "$HOME/.config/btop"
+    "$HOME/.config/Code"
+    "$HOME/.config/dconf"
+    "$HOME/.config/fastfetch"
+    "$HOME/.config/fontconfig"
+    "$HOME/.config/gh"
+    "$HOME/.config/gh-copilot"
+    "$HOME/.config/ghostty"
+    "$HOME/.config/git"
+    "$HOME/.config/github-copilot"
+    "$HOME/.config/go"
+    "$HOME/.config/hypr"
+    "$HOME/.config/kitty"
+    "$HOME/.config/lazydocker"
+    "$HOME/.config/lazygit"
+    "$HOME/.config/mcphub"
+    "$HOME/.config/obsidian"
+    "$HOME/.config/omarchy"
+    "$HOME/.config/uwsm"
+    "$HOME/.config/waybar"
+
     # Add more dotfiles/directories as needed
 )
 
