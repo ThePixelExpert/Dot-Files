@@ -7,7 +7,7 @@
 # 3. Keeping everything in sync with git
 
 # Configuration
-REPO_DIR="$HOME/Dot-Files"  # Adjust this to your repo location
+REPO_DIR="$HOME/home/logan/Projects/Dot-Files"  # Adjust this to your repo location
 DOTFILES=(
     "$HOME/.bashrc"
     "$HOME/.zshrc"
@@ -141,11 +141,11 @@ commit_changes() {
         return
     fi
     
-git add .
-git commit -m "Update dotfiles - $(date '+%Y-%m-%d %H:%M:%S')"
+    git add .
+    git commit -m "Update dotfiles - $(date '+%Y-%m-%d %H:%M:%S')"
     
     read -p "Push changes to GitHub? (y/n): " -n 1 -r
-echo
+    echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         git push
         print_info "Changes pushed to GitHub"
@@ -157,7 +157,7 @@ pull_changes() {
     print_info "Pulling latest changes from GitHub..."
     
     cd "$REPO_DIR" || exit 1
-git pull
+    git pull
     
     print_info "Latest changes pulled"
 }
