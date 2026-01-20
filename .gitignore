@@ -1,0 +1,15 @@
+# Backup files
+*.backup.*
+
+# Vim swap files
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Sensitive data
+*_history
+*.secret
+*.key
