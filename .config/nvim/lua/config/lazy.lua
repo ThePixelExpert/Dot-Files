@@ -63,3 +63,11 @@ require("lazy").setup({
     rtp = { disabled_plugins = { "gzip", "tarPlugin", "tohtml", "tutor", "zipPlugin" } },
   },
 })
+
+require("neo-tree").setup({
+  filesystem = {
+    filtered_items = {
+      hide_dotfiles = false, -- Set to false to show hidden files
+    },
+  },
+})
