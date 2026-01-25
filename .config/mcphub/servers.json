@@ -2,7 +2,7 @@
   "mcpServers": {
     "code-analyzer": {
       "args": [
-        "/root/.config/github-copilot/agents/code-analyzer/index.js"
+        "/home/logan/Dot-Files/.config/github-copilot/agents/code-analyzer/index.js"
       ],
       "autoApprove": [
         "analyze_code",
@@ -25,7 +25,7 @@
     },
     "documentation-writer": {
       "args": [
-        "/root/.config/github-copilot/agents/documentation-writer/index.js"
+        "/home/logan/.config/github-copilot/agents/documentation-writer/index.js"
       ],
       "autoApprove": [
         "generate_function_doc",
@@ -44,7 +44,7 @@
     },
     "research-agent": {
       "args": [
-        "/root/.config/github-copilot/agents/research-agent/index.js"
+        "/home/logan/.config/github-copilot/agents/research-agent/index.js"
       ],
       "autoApprove": [
         "web_search",
