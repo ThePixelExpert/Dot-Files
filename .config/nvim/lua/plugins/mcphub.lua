@@ -6,10 +6,12 @@ return {
     dependencies = {
       "nvim-lua/plenary.nvim",
     },
+    build = "bundled_build.lua",
     config = function()
       vim.env.PATH = vim.env.HOME .. "/.local/npm-global/bin:" .. vim.env.PATH
 
       require("mcphub").setup({
+        use_bundled_binary = true,
         config = vim.fn.expand("~/.config/mcphub/servers.json"),
         auto_toggle_mcp_servers = true,
 
@@ -28,16 +30,8 @@ return {
           level = vim.log.levels.INFO,
         },
       })
-
-      vim.defer_fn(function()
-        require("mcphub.extensions.copilotchat.functions").register({
-          enabled = true,
-          convert_tools_to_functions = true,
-          convert_resources_to_functions = true,
-          add_mcp_prefix = false,
-        })
-      end, 5000)
     end,
+
     cmd = { "MCPHub", "MCPHubStart", "MCPHubStop", "MCPHubRestart", "MCPHubStatus" },
     keys = {
       { "<leader>mm", "<cmd>MCPHub<cr>", desc = "Open MCP Hub" },

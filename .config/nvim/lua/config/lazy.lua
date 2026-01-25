@@ -1,5 +1,3 @@
--- ~/.config/nvim/lua/config/lazy.lua
-
 -- Bootstrap lazy.nvim if not installed
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -21,7 +19,7 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
   spec = {
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
-    { import = "plugins" },
+    { import = "plugins" }, -- This automatically loads all files in lua/plugins/
 
     -- Copilot core
     {
@@ -35,22 +33,7 @@ require("lazy").setup({
         })
       end,
     },
-
-    -- Copilot Chat
-    {
-      "CopilotC-Nvim/CopilotChat.nvim",
-      branch = "canary",
-      dependencies = {
-        { "zbirenbaum/copilot.lua" },
-        { "nvim-lua/plenary.nvim" },
-      },
-      config = function()
-        local ok, chat = pcall(require, "CopilotChat")
-        if ok then
-          chat.setup({ backend = "copilot_cli" })
-        end
-      end,
-    },
+    -- Removed CopilotChat from here - it's now in lua/plugins/copilotchat.lua
   },
 
   defaults = {
@@ -67,7 +50,7 @@ require("lazy").setup({
 require("neo-tree").setup({
   filesystem = {
     filtered_items = {
-      hide_dotfiles = false, -- Set to false to show hidden files
+      hide_dotfiles = false,
     },
   },
 })
