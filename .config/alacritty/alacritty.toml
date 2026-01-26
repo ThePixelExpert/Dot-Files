@@ -1,4 +1,4 @@
-general.import = [ "~/.config/omarchy/current/theme/alacritty.toml" ]
+general.import = [ "theme.toml" ]
 
 [env]
 TERM = "xterm-256color"
@@ -18,3 +18,5 @@ decorations = "None"
 bindings = [
 { key = "F11", action = "ToggleFullscreen" }
 ]
+
+
