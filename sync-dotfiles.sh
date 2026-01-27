@@ -77,7 +77,7 @@ create_symlink() {
   # Create parent directory if needed
   mkdir -p "$(dirname "$link_name")"
 
-  # Create symlink
+  # Create symlink path/to/link path/to/targert
   ln -s "$target" "$link_name"
   print_info "Created symlink: $link_name -> $target"
 }
