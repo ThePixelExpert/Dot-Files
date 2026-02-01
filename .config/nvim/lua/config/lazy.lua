@@ -16,7 +16,12 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 -- Correctly open and close only one setup() call
-
+require("lazy").setup({
+  spec = {
+    { "LazyVim/LazyVim", import = "lazyvim.plugins" },
+    { import = "plugins" }, -- This automatically loads all files in lua/plugins/
+  },
+})
 
 require("neo-tree").setup({
   filesystem = {

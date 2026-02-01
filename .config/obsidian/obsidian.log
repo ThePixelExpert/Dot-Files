@@ -435,3 +435,11 @@
 2026-01-15 22:33:22 Failed to check for update using Github (net::ERR_NAME_NOT_RESOLVED)
 2026-01-15 22:33:22 Checking for update using obsidian.md
 2026-01-15 22:33:23 Failed to check for update using obsidian.md (net::ERR_NAME_NOT_RESOLVED)
+2026-01-29 14:34:43 Loading main app package /usr/lib/obsidian/obsidian.asar
+2026-01-29 14:34:44 Checking for update using Github
+2026-01-29 14:34:44 Success.
+2026-01-29 14:34:44 Latest version is 1.11.5
+2026-01-29 14:34:44 Downloading update from https://github.com/obsidianmd/obsidian-releases/releases/download/v1.11.5/obsidian-1.11.5.asar.gz
+2026-01-29 14:34:44 Verifying hash & signature. Size= 8771203
+2026-01-29 14:34:44 Saving file
+2026-01-29 14:34:44 Update complete.
