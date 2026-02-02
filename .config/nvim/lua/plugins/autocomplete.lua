@@ -1,24 +1,15 @@
 return {
-  -- Completion engine
-  {
-    'saghen/blink.cmp',
-    dependencies = {
-      {
-        "xiaket/codeium.nvim",
-        dependencies = {
-          "nvim-lua/plenary.nvim",
-        },
-        opts = {},
-      },
+  "supermaven-inc/supermaven-nvim",
+  opts = {
+    keymaps = {
+      accept_suggestion = "<C-l>",
+      clear_suggestion = "<C-]>",
+      accept_word = "<C-j>",
     },
-    opts = {
-      sources = {
-        completion = {
-          enabled_providers = { 'lsp', 'path', 'snippets', 'buffer', 'codeium' },
-        },
-        providers = {
-          codeium = { name = 'Codeium', module = 'codeium.blink' },
-        },
-      },
+    ignore_filetypes = { cpp = true }, -- optional: disable for specific filetypes
+    color = {
+      suggestion_color = "#ffffff",
+      cterm = 244,
     },
-  }, }
+  },
+}
