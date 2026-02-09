@@ -707,3 +707,8 @@
 2026-02-09 21:07:09 Failed to check for update using Github (net::ERR_INTERNET_DISCONNECTED)
 2026-02-09 21:07:09 Checking for update using obsidian.md
 2026-02-09 21:07:09 Failed to check for update using obsidian.md (net::ERR_INTERNET_DISCONNECTED)
+2026-02-09 21:42:10 Loading updated app package /home/logan/.config/obsidian/obsidian-1.11.7.asar
+2026-02-09 21:42:10 Checking for update using Github
+2026-02-09 21:42:10 Success.
+2026-02-09 21:42:10 Latest version is 1.11.7
+2026-02-09 21:42:10 App is up to date.
