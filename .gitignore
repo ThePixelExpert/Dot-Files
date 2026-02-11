@@ -12,4 +12,5 @@ Thumbs.db
 # Sensitive data
 *_history
 *.secret
+.config/obsidian
 *.key
