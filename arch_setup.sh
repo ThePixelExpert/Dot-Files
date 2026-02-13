@@ -20,7 +20,9 @@ sudo pacman -S --needed --noconfirm \
     polkit \
     neovim \
     thunar \
-    flatpak
+    flatpak \ 
+    obsidian \
+    docker
 
 # Install Hyprland ecosystem
 echo "Installing Hyprland and components..."
