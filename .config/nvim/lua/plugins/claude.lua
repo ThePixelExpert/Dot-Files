@@ -30,6 +30,13 @@ return {
             })
           end,
         },
+        display = {
+          chat = {
+            window = {
+              width = 0.2 -- 30% of screen width (use 0.2-0.4 to adjust)
+            },
+          },
+        },
       })
 
       -- Keybindings

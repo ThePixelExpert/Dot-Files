@@ -9,7 +9,20 @@ return {
       { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
     },
     config = function()
-      vim.keymap.set("n", "<leader>ff", require("telescope.builtin").find_files, { desc = "Find Files" })
+      require("telescope").setup({
+        defaults = {
+          file_ignore_patterns = { "^.git/" }, -- Still ignore .git directory
+        },
+        pickers = {
+          find_files = {
+            hidden = true, -- Show hidden/dot files by default
+          },
+        },
+      })
+
+      vim.keymap.set("n", "<leader>ff", function()
+        require("telescope.builtin").find_files({ hidden = true })
+      end, { desc = "Find Files" })
     end,
   } -- stylua: ignore
   -- change some options

@@ -1,0 +1,11 @@
+Linear Sorting:
+
+[32,24,8,67,3,21]
+
+search for 3:
+
+for every element in the array, do if statement for if the current element is 
+equal to the wanted element
+
+
+search for 15:
