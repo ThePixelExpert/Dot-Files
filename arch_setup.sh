@@ -111,7 +111,9 @@ flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flat
 echo "Installing AUR helper (paru)..."
 if ! command -v paru &> /dev/null; then
     cd /tmp
+    sudo rm -rf paru  # Clean up any existing directory
     git clone https://aur.archlinux.org/paru.git
+    sudo chmod -R 755 paru  # Give read/execute to all, write to owner
     cd paru
     makepkg -si --noconfirm
     cd ~
