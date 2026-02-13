@@ -112,6 +112,8 @@ sudo virsh net-start default 2>/dev/null || echo "Default network already starte
 echo "Setting up Flatpak..."
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo 2>/dev/null || echo "Flathub already added"
 
+flatpak install com.discordapp.Discord
+flatpak install app.zen_browser.zen
 # Install AUR helper (paru)
 echo "Installing AUR helper (paru)..."
 if ! command -v paru &> /dev/null; then
