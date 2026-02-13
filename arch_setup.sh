@@ -77,9 +77,31 @@ sudo pacman -S --needed --noconfirm \
     lazygit \
     fastfetch
 
+# Install virtualization tools
+echo "Installing virtualization tools..."
+sudo pacman -S --needed --noconfirm \
+    libvirt \
+    virt-manager \
+    qemu-full \
+    dnsmasq \
+    dmidecode
+
 # Enable services
 echo "Enabling essential services..."
 sudo systemctl enable NetworkManager
+
+# Enable and start virtualization services
+echo "Enabling virtualization services..."
+sudo systemctl enable --now libvirtd.service virtlogd.service
+
+# Add user to libvirt group
+echo "Adding user to libvirt group..."
+sudo usermod -aG libvirt $USER
+
+# Configure default network
+echo "Configuring libvirt default network..."
+sudo virsh net-autostart default
+sudo virsh net-start default
 
 # Setup Flatpak
 echo "Setting up Flatpak..."
@@ -115,8 +137,10 @@ echo "Next steps:"
 echo "1. Copy your omarchy config files to ~/.config/"
 echo "2. Install Zen browser: flatpak install flathub io.github.zen_browser.zen"
 echo "3. Configure starship: starship init bash >> ~/.bashrc"
-echo "4. Reboot and start Hyprland with: uwsm start hyprland.desktop"
+echo "4. REBOOT to apply libvirt group membership"
+echo "5. After reboot, start Hyprland with: uwsm start hyprland.desktop"
 echo "   (or just 'Hyprland' if not using uwsm)"
 echo ""
 echo "Note: Discord will be accessed through Zen browser"
+echo "Note: You need to reboot for libvirt group changes to take effect"
 echo ""
