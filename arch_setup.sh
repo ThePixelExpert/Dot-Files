@@ -139,6 +139,10 @@ paru -S --needed --noconfirm \
     uwsm \
     devpod-bin
 
+echo "Installing wal for Beach BG"
+wal -i .config/assets/Beach-BG.jpg
+
+
 echo ""
 echo "================================"
 echo "Installation complete!"
