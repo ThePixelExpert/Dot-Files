@@ -22,7 +22,9 @@ sudo pacman -S --needed --noconfirm \
     thunar \
     flatpak \ 
     obsidian \
-    docker
+    docker \
+    ttf-roboto \
+    ttf-jetbrains-mono
 
 # Install Hyprland ecosystem
 echo "Installing Hyprland and components..."
@@ -137,10 +139,16 @@ paru -S --needed --noconfirm \
     walker \
     bluetuith \
     uwsm \
-    devpod-bin
+    devpod-bin \
+    apple-fonts
 
 echo "Installing wal for Beach BG"
 wal -i .config/assets/Beach-BG.jpg
+
+echo "adding proper user groups"
+sudo usermod -aG video $USER
+sudo usermod -aG input $USER
+sudo usermod -aG render $USER
 
 
 echo ""
