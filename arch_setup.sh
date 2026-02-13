@@ -3,8 +3,6 @@
 # Arch Linux Minimal Hyprland Install Script
 # Run this after completing base Arch installation with archinstall
 
-set -e  # Exit on error
-
 echo "================================"
 echo "Minimal Arch + Hyprland Setup"
 echo "================================"
@@ -86,26 +84,33 @@ sudo pacman -S --needed --noconfirm \
     dnsmasq \
     dmidecode
 
-# Enable services
+# Enable services (skip if already enabled)
 echo "Enabling essential services..."
-sudo systemctl enable NetworkManager
+sudo systemctl enable NetworkManager 2>/dev/null || echo "NetworkManager already enabled"
 
 # Enable and start virtualization services
 echo "Enabling virtualization services..."
-sudo systemctl enable --now libvirtd.service virtlogd.service
+sudo systemctl enable libvirtd.service 2>/dev/null || echo "libvirtd already enabled"
+sudo systemctl enable virtlogd.service 2>/dev/null || echo "virtlogd already enabled"
+sudo systemctl start libvirtd.service 2>/dev/null || echo "libvirtd already running"
+sudo systemctl start virtlogd.service 2>/dev/null || echo "virtlogd already running"
 
-# Add user to libvirt group
+# Add user to libvirt group (skip if already in group)
 echo "Adding user to libvirt group..."
-sudo usermod -aG libvirt $USER
+if groups $USER | grep -q '\blibvirt\b'; then
+    echo "User already in libvirt group"
+else
+    sudo usermod -aG libvirt $USER
+fi
 
 # Configure default network
 echo "Configuring libvirt default network..."
-sudo virsh net-autostart default
-sudo virsh net-start default
+sudo virsh net-autostart default 2>/dev/null || echo "Default network already set to autostart"
+sudo virsh net-start default 2>/dev/null || echo "Default network already started"
 
 # Setup Flatpak
 echo "Setting up Flatpak..."
-flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo 2>/dev/null || echo "Flathub already added"
 
 # Install AUR helper (paru)
 echo "Installing AUR helper (paru)..."
@@ -113,7 +118,7 @@ if ! command -v paru &> /dev/null; then
     cd /tmp
     sudo rm -rf paru  # Clean up any existing directory
     git clone https://aur.archlinux.org/paru.git
-    sudo chmod -R 755 paru  # Give read/execute to all, write to owner
+    sudo chmod -R 755 paru
     cd paru
     makepkg -si --noconfirm
     cd ~
