@@ -21,7 +21,7 @@ sudo pacman -S --needed --noconfirm \
     polkit \
     neovim \
     thunar \
-    flatpak \ 
+    flatpak \
     obsidian \
     docker \
     ttf-roboto \
