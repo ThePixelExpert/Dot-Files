@@ -14,3 +14,7 @@ Thumbs.db
 *.secret
 .config/obsidian
 *.key
+.config/gh
+.config/git
+.config/obsidian
+
