@@ -17,6 +17,7 @@ sudo pacman -S --needed --noconfirm \
     base-devel \
     git \
     grub \
+    yay \
     polkit \
     neovim \
     thunar \
@@ -149,6 +150,10 @@ echo "adding proper user groups"
 sudo usermod -aG video $USER
 sudo usermod -aG input $USER
 sudo usermod -aG render $USER
+
+
+echo "Installing keyboard config..."
+yay -S kanata-bin --noconfirm
 
 
 echo ""

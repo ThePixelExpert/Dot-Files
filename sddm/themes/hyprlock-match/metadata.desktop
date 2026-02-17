@@ -1,0 +1,16 @@
+[SddmGreeterTheme]
+Name=Hyprlock Match
+Description=Custom theme matching hyprlock appearance
+Author=Logan (based on Maldives by Abdurrahman AVCI)
+Copyright=(c) 2013, Abdurrahman AVCI; Modified 2026
+License=CC-BY-SA
+Type=sddm-theme
+Version=0.1
+Website=https://github.com/sddm/sddm
+Screenshot=maldives.jpg
+MainScript=Main.qml
+ConfigFile=theme.conf
+TranslationsDirectory=translations
+Email=abdurrahmanavci@gmail.com
+Theme-Id=maldives
+Theme-API=2.0
