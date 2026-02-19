@@ -1,0 +1,125 @@
+/* Walker theme: mytheme
+   Place at: ~/.config/walker/themes/mytheme/style.css
+
+   Inherits walker's base defaults, then overrides with our style.
+   Colors use a dark, slightly warm palette — easy to swap out.
+*/
+
+/* ── Variables ─────────────────────────────────────────── */
+* {
+  --bg:         #1a1b26;   /* main background      */
+  --bg-alt:     #16161e;   /* darker bg layer      */
+  --surface:    #24253a;   /* item hover/selection */
+  --border:     #2e3050;   /* border color         */
+  --text:       #c0caf5;   /* primary text         */
+  --text-muted: #565f89;   /* placeholder / muted  */
+  --accent:     #7aa2f7;   /* selection highlight  */
+  --accent-bg:  #1e2030;   /* accent tinted bg     */
+  --radius:     12px;
+  --radius-sm:  8px;
+  --font:       "CaskaydiaMono Nerd Font", "JetBrainsMono Nerd Font", monospace;
+  --font-size:  14px;
+}
+
+/* ── Window ────────────────────────────────────────────── */
+window {
+  background: transparent;
+}
+
+/* ── Outer box wrapper ─────────────────────────────────── */
+#box {
+  background-color: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 8px;
+  min-width: 560px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+}
+
+/* ── Search input ──────────────────────────────────────── */
+#search {
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: var(--font-size);
+  padding: 10px 14px;
+  margin-bottom: 8px;
+  caret-color: var(--accent);
+}
+
+#search:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+/* Placeholder text */
+#search text {
+  color: var(--text-muted);
+}
+
+/* ── Results list ──────────────────────────────────────── */
+#list {
+  background: transparent;
+  padding: 0;
+}
+
+/* ── Individual items ──────────────────────────────────── */
+#item {
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: var(--font-size);
+  transition: background 100ms ease;
+}
+
+#item:hover {
+  background: var(--surface);
+}
+
+#item:selected {
+  background: var(--accent-bg);
+  border: 1px solid var(--accent);
+  color: var(--accent);
+}
+
+/* ── Item icon ─────────────────────────────────────────── */
+#icon {
+  margin-right: 10px;
+  min-width: 20px;
+  min-height: 20px;
+}
+
+/* ── Item label / name ─────────────────────────────────── */
+#label {
+  color: var(--text);
+  font-size: var(--font-size);
+}
+
+#item:selected #label {
+  color: var(--accent);
+}
+
+/* ── Item sub-label (description / category) ───────────── */
+#sub {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+/* ── Scrollbar ─────────────────────────────────────────── */
+scrollbar {
+  background: transparent;
+  border: none;
+}
+
+scrollbar slider {
+  background: var(--border);
+  border-radius: 4px;
+  min-width: 4px;
+}
+
+scrollbar slider:hover {
+  background: var(--text-muted);
+}

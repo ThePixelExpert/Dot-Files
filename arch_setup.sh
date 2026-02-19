@@ -18,6 +18,7 @@ sudo pacman -S --needed --noconfirm \
     git \
     grub \
     yay \
+    wget \
     polkit \
     neovim \
     thunar \
@@ -86,7 +87,7 @@ sudo pacman -S --needed --noconfirm \
     libvirt \
     virt-manager \
     qemu-full \
-    dnsmasq \
+    dnsmasq arc\
     dmidecode
 
 # Enable services (skip if already enabled)
@@ -155,6 +156,9 @@ sudo usermod -aG render $USER
 echo "Installing keyboard config..."
 yay -S kanata-bin --noconfirm
 
+
+echo "Installing Better Discord and themes"
+./install_betterdiscord.sh
 
 echo ""
 echo "================================"
