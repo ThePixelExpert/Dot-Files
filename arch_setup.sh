@@ -7,29 +7,69 @@ echo "================================"
 echo "Minimal Arch + Hyprland Setup"
 echo "================================"
 
+# -----------------------------------------------
+# Helper functions
+# -----------------------------------------------
+
+# Install a pacman package only if not already installed
+pacman_install() {
+    local pkg=$1
+    if pacman -Qi "$pkg" &>/dev/null; then
+        echo "[SKIP] $pkg is already installed"
+    else
+        echo "[INSTALL] $pkg"
+        sudo pacman -S --needed --noconfirm "$pkg"
+    fi
+}
+
+# Install an AUR package via paru only if not already installed
+paru_install() {
+    local pkg=$1
+    if pacman -Qi "$pkg" &>/dev/null; then
+        echo "[SKIP] $pkg is already installed"
+    else
+        echo "[INSTALL] $pkg (AUR)"
+        paru -S --needed --noconfirm "$pkg"
+    fi
+}
+
+# Install an AUR package via yay only if not already installed
+yay_install() {
+    local pkg=$1
+    if pacman -Qi "$pkg" &>/dev/null; then
+        echo "[SKIP] $pkg is already installed"
+    else
+        echo "[INSTALL] $pkg (AUR/yay)"
+        yay -S --needed --noconfirm "$pkg"
+    fi
+}
+
+# Install a flatpak only if not already installed
+flatpak_install() {
+    local app_id=$1
+    if flatpak list --app | grep -q "$app_id"; then
+        echo "[SKIP] $app_id is already installed"
+    else
+        echo "[INSTALL] $app_id (Flatpak)"
+        flatpak install flathub "$app_id" -y
+    fi
+}
+
+# -----------------------------------------------
 # Update system
+# -----------------------------------------------
 echo "Updating system..."
 sudo pacman -Syu --noconfirm
 
-# Install essential packages
-echo "Installing essential packages..."
-sudo pacman -S --needed --noconfirm \
-    base-devel \
-    git \
-    grub \
-    wget \
-    polkit \
-    nvim \
-    thunar \
-    flatpak \
-    obsidian \
-    docker \
-    ttf-roboto \
-    ttf-jetbrains-mono
-
+# -----------------------------------------------
 # Install yay (AUR helper) from source
-echo "Installing yay AUR helper..."
-if ! command -v yay &> /dev/null; then
+# -----------------------------------------------
+echo ""
+echo "Checking yay AUR helper..."
+if command -v yay &>/dev/null; then
+    echo "[SKIP] yay is already installed"
+else
+    echo "[INSTALL] yay"
     cd /tmp
     sudo rm -rf yay
     git clone https://aur.archlinux.org/yay.git
@@ -37,149 +77,219 @@ if ! command -v yay &> /dev/null; then
     cd yay
     makepkg -si --noconfirm
     cd ~
-else
-    echo "yay already installed, skipping..."
 fi
 
-# Install Hyprland ecosystem
+# -----------------------------------------------
+# Essential packages
+# -----------------------------------------------
+echo ""
+echo "Installing essential packages..."
+pacman_install base-devel
+pacman_install git
+pacman_install grub
+pacman_install wget
+pacman_install polkit
+pacman_install neovim
+pacman_install thunar
+pacman_install flatpak
+pacman_install obsidian
+pacman_install docker
+pacman_install ttf-roboto
+pacman_install ttf-jetbrains-mono
+
+# -----------------------------------------------
+# Hyprland ecosystem
+# -----------------------------------------------
+echo ""
 echo "Installing Hyprland and components..."
-sudo pacman -S --needed --noconfirm \
-    hyprland \
-    xdg-desktop-portal-hyprland \
-    hyprcursor \
-    hyprpaper \
-    hypridle \
-    hyprlock
+pacman_install hyprland
+pacman_install xdg-desktop-portal-hyprland
+pacman_install hyprcursor
+pacman_install hyprpaper
+pacman_install hypridle
+pacman_install hyprlock
 
-# Install terminal and shell
+# -----------------------------------------------
+# Terminal and shell
+# -----------------------------------------------
+echo ""
 echo "Installing terminal and shell tools..."
-sudo pacman -S --needed --noconfirm \
-    alacritty \
-    bash-completion \
-    starship
+pacman_install alacritty
+pacman_install bash-completion
+pacman_install starship
 
-# Install audio
+# -----------------------------------------------
+# Audio
+# -----------------------------------------------
+echo ""
 echo "Installing audio system..."
-sudo pacman -S --needed --noconfirm \
-    pipewire \
-    pipewire-audio \
-    pipewire-pulse \
-    wireplumber
+pacman_install pipewire
+pacman_install pipewire-audio
+pacman_install pipewire-pulse
+pacman_install wireplumber
 
-# Install networking
+# -----------------------------------------------
+# Networking
+# -----------------------------------------------
+echo ""
 echo "Installing network tools..."
-sudo pacman -S --needed --noconfirm \
-    networkmanager \
-    nm-connection-editor
+pacman_install networkmanager
+pacman_install nm-connection-editor
 
-# Install system utilities
+# -----------------------------------------------
+# System utilities
+# -----------------------------------------------
+echo ""
 echo "Installing system utilities..."
-sudo pacman -S --needed --noconfirm \
-    brightnessctl \
-    lxsession \
-    grim \
-    slurp \
-    python-pywal
+pacman_install brightnessctl
+pacman_install lxsession
+pacman_install grim
+pacman_install slurp
+pacman_install python-pywal
 
-# Install UI components
+# -----------------------------------------------
+# UI components
+# -----------------------------------------------
+echo ""
 echo "Installing UI components..."
-sudo pacman -S --needed --noconfirm \
-    waybar \
-    mako
+pacman_install waybar
+pacman_install mako
 
-# Install CLI tools
+# -----------------------------------------------
+# CLI tools
+# -----------------------------------------------
+echo ""
 echo "Installing CLI tools..."
-sudo pacman -S --needed --noconfirm \
-    btop \
-    lazygit \
-    fastfetch
+pacman_install btop
+pacman_install lazygit
+pacman_install fastfetch
 
-# Install virtualization tools
+# -----------------------------------------------
+# Virtualization tools
+# -----------------------------------------------
+echo ""
 echo "Installing virtualization tools..."
-sudo pacman -S --needed --noconfirm \
-    libvirt \
-    virt-manager \
-    qemu-full \
-    dnsmasq \
-    dmidecode
+pacman_install libvirt
+pacman_install virt-manager
+pacman_install qemu-full
+pacman_install dnsmasq
+pacman_install dmidecode
 
-# Enable services (skip if already enabled)
+# -----------------------------------------------
+# Enable services
+# -----------------------------------------------
+echo ""
 echo "Enabling essential services..."
-sudo systemctl enable NetworkManager 2>/dev/null || echo "NetworkManager already enabled"
+sudo systemctl enable NetworkManager 2>/dev/null || echo "[SKIP] NetworkManager already enabled"
 
-# Enable and start virtualization services
 echo "Enabling virtualization services..."
-sudo systemctl enable libvirtd.service 2>/dev/null || echo "libvirtd already enabled"
-sudo systemctl enable virtlogd.service 2>/dev/null || echo "virtlogd already enabled"
-sudo systemctl start libvirtd.service 2>/dev/null || echo "libvirtd already running"
-sudo systemctl start virtlogd.service 2>/dev/null || echo "virtlogd already running"
+sudo systemctl enable libvirtd.service 2>/dev/null || echo "[SKIP] libvirtd already enabled"
+sudo systemctl enable virtlogd.service 2>/dev/null || echo "[SKIP] virtlogd already enabled"
+sudo systemctl start libvirtd.service 2>/dev/null || echo "[SKIP] libvirtd already running"
+sudo systemctl start virtlogd.service 2>/dev/null || echo "[SKIP] virtlogd already running"
 
-# Add user to libvirt group (skip if already in group)
-echo "Adding user to libvirt group..."
-if groups $USER | grep -q '\blibvirt\b'; then
-    echo "User already in libvirt group"
-else
-    sudo usermod -aG libvirt $USER
-fi
+# -----------------------------------------------
+# User groups
+# -----------------------------------------------
+echo ""
+echo "Configuring user groups..."
+for group in libvirt video input render; do
+    if groups $USER | grep -qw "$group"; then
+        echo "[SKIP] $USER already in $group group"
+    else
+        echo "[ADD] Adding $USER to $group group"
+        sudo usermod -aG "$group" $USER
+    fi
+done
 
-# Configure default network
+# -----------------------------------------------
+# Libvirt default network
+# -----------------------------------------------
+echo ""
 echo "Configuring libvirt default network..."
-sudo virsh net-autostart default 2>/dev/null || echo "Default network already set to autostart"
-sudo virsh net-start default 2>/dev/null || echo "Default network already started"
+sudo virsh net-autostart default 2>/dev/null || echo "[SKIP] Default network already set to autostart"
+sudo virsh net-start default 2>/dev/null || echo "[SKIP] Default network already started"
 
-# Setup Flatpak
+# -----------------------------------------------
+# Flatpak
+# -----------------------------------------------
+echo ""
 echo "Setting up Flatpak..."
-flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo 2>/dev/null || echo "Flathub already added"
+flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo 2>/dev/null || echo "[SKIP] Flathub already added"
 
-flatpak install com.discordapp.Discord -y
-flatpak install app.zen_browser.zen -y
+flatpak_install com.discordapp.Discord
+flatpak_install app.zen_browser.zen
 
-# Install AUR helper (paru)
-echo "Installing AUR helper (paru)..."
-if ! command -v paru &> /dev/null; then
+# -----------------------------------------------
+# Install paru (AUR helper)
+# -----------------------------------------------
+echo ""
+echo "Checking paru AUR helper..."
+if command -v paru &>/dev/null; then
+    echo "[SKIP] paru is already installed"
+else
+    echo "[INSTALL] paru"
     cd /tmp
-    sudo rm -rf paru  # Clean up any existing directory
+    sudo rm -rf paru
     git clone https://aur.archlinux.org/paru.git
     sudo chmod -R 755 paru
     cd paru
     makepkg -si --noconfirm
     cd ~
-else
-    echo "paru already installed, skipping..."
 fi
 
-# Install AUR packages
+# -----------------------------------------------
+# AUR packages via paru
+# -----------------------------------------------
+echo ""
 echo "Installing AUR packages..."
-paru -S --needed --noconfirm \
-    impala \
-    walker \
-    bluetuith \
-    uwsm \
-    devpod-bin \
-    apple-fonts
+paru_install impala
+paru_install walker
+paru_install bluetuith
+paru_install uwsm
+paru_install devpod-bin
+paru_install apple-fonts
 
+# -----------------------------------------------
+# Dotfiles setup
+# -----------------------------------------------
+echo ""
 cd ~/Dot-Files
 
-echo "Installing wal for Beach BG"
-wal -i .config/assets/Beach-BG.jpg
+echo "Installing wal for Beach BG..."
+if command -v wal &>/dev/null; then
+    wal -i .config/assets/Beach-BG.jpg
+else
+    echo "[SKIP] wal not found, skipping wallpaper setup"
+fi
 
-echo "adding proper user groups"
-sudo usermod -aG video $USER
-sudo usermod -aG input $USER
-sudo usermod -aG render $USER
-
-# Set $TERMINAL environment variable to alacritty
+# -----------------------------------------------
+# TERMINAL environment variable
+# -----------------------------------------------
+echo ""
 echo "Setting TERMINAL environment variable..."
-if ! grep -q "TERMINAL" ~/.bashrc; then
+if grep -q "export TERMINAL" ~/.bashrc; then
+    echo "[SKIP] TERMINAL already set in .bashrc"
+else
     echo 'export TERMINAL=alacritty' >> ~/.bashrc
-fi
-if ! grep -q "TERMINAL" ~/.bash_profile; then
-    echo 'export TERMINAL=alacritty' >> ~/.bash_profile
+    echo "[SET] TERMINAL=alacritty added to .bashrc"
 fi
 
-# Autostart Hyprland on login to TTY1
+if grep -q "export TERMINAL" ~/.bash_profile; then
+    echo "[SKIP] TERMINAL already set in .bash_profile"
+else
+    echo 'export TERMINAL=alacritty' >> ~/.bash_profile
+    echo "[SET] TERMINAL=alacritty added to .bash_profile"
+fi
+
+# -----------------------------------------------
+# Hyprland autostart on TTY1
+# -----------------------------------------------
+echo ""
 echo "Setting up Hyprland autostart on TTY1..."
-if ! grep -q "uwsm start hyprland" ~/.bash_profile; then
+if grep -q "uwsm start hyprland" ~/.bash_profile; then
+    echo "[SKIP] Hyprland autostart already configured"
+else
     cat >> ~/.bash_profile << 'EOF'
 
 # Autostart Hyprland on TTY1
@@ -187,29 +297,40 @@ if [ -z "$WAYLAND_DISPLAY" ] && [ "$(tty)" = "/dev/tty1" ]; then
     exec uwsm start hyprland.desktop
 fi
 EOF
+    echo "[SET] Hyprland autostart added to .bash_profile"
 fi
 
-
+# -----------------------------------------------
+# Keyboard config (kanata)
+# -----------------------------------------------
+echo ""
 echo "Installing keyboard config..."
-yay -S kanata-bin --noconfirm
+yay_install kanata-bin
 
+# -----------------------------------------------
+# BetterDiscord
+# -----------------------------------------------
+echo ""
+echo "Installing Better Discord and themes..."
+if [ -f ./install_betterdiscord.sh ]; then
+    ./install_betterdiscord.sh
+else
+    echo "[SKIP] install_betterdiscord.sh not found"
+fi
 
-echo "Installing Better Discord and themes"
-./install_betterdiscord.sh
-
+# -----------------------------------------------
+# Done
+# -----------------------------------------------
 echo ""
 echo "================================"
 echo "Installation complete!"
 echo "================================"
 echo ""
 echo "Next steps:"
-echo "1. Copy your omarchy config files to ~/.config/"
-echo "2. Install Zen browser: flatpak install flathub io.github.zen_browser.zen"
-echo "3. Configure starship: starship init bash >> ~/.bashrc"
-echo "4. REBOOT to apply libvirt group membership"
-echo "5. After reboot, start Hyprland with: uwsm start hyprland.desktop"
-echo "   (or just 'Hyprland' if not using uwsm)"
+echo "1. Copy your dotfiles config files to ~/.config/"
+echo "2. Configure starship: starship init bash >> ~/.bashrc"
+echo "3. REBOOT to apply group membership changes"
+echo "4. After reboot, Hyprland will autostart on TTY1 login"
 echo ""
-echo "Note: Discord will be accessed through Zen browser"
-echo "Note: You need to reboot for libvirt group changes to take effect"
+echo "Note: You need to reboot for group changes to take effect"
 echo ""
