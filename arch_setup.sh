@@ -15,6 +15,7 @@ sudo pacman -Syu --noconfirm
 echo "Installing essential packages..."
 sudo pacman -S --needed --noconfirm \
     base-devel \
+    uwsm \
     git \
     grub \
     wget \
