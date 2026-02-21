@@ -225,7 +225,7 @@ flatpak_install app.zen_browser.zen
 # -----------------------------------------------
 echo ""
 echo "Checking paru AUR helper..."
-if command -v paru &>/dev/null; then
+if command -v paru &>/dev/null || pacman -Qi paru &>/dev/null; then
     echo "[SKIP] paru is already installed"
 else
     echo "[INSTALL] paru"
