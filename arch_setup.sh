@@ -20,7 +20,7 @@ sudo pacman -S --needed --noconfirm \
     yay \
     wget \
     polkit \
-    neovim \
+    nvim \
     thunar \
     flatpak \
     obsidian \
@@ -143,6 +143,8 @@ paru -S --needed --noconfirm \
     uwsm \
     devpod-bin \
     apple-fonts
+
+cd ~/Dot-Files
 
 echo "Installing wal for Beach BG"
 wal -i .config/assets/Beach-BG.jpg
