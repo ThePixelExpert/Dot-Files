@@ -96,6 +96,7 @@ pacman_install obsidian
 pacman_install docker
 pacman_install ttf-roboto
 pacman_install ttf-jetbrains-mono
+pacman_install npm
 
 # -----------------------------------------------
 # Hyprland ecosystem
@@ -333,6 +334,8 @@ else
     echo "[SKIP] install_betterdiscord.sh not found"
 fi
 
+echo "installing mcp hub"
+sudo npm install -g mcp-hub@latest
 # -----------------------------------------------
 # Done
 # -----------------------------------------------
