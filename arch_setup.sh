@@ -17,7 +17,6 @@ sudo pacman -S --needed --noconfirm \
     base-devel \
     git \
     grub \
-    yay \
     wget \
     polkit \
     nvim \
@@ -27,6 +26,20 @@ sudo pacman -S --needed --noconfirm \
     docker \
     ttf-roboto \
     ttf-jetbrains-mono
+
+# Install yay (AUR helper) from source
+echo "Installing yay AUR helper..."
+if ! command -v yay &> /dev/null; then
+    cd /tmp
+    sudo rm -rf yay
+    git clone https://aur.archlinux.org/yay.git
+    sudo chmod -R 755 yay
+    cd yay
+    makepkg -si --noconfirm
+    cd ~
+else
+    echo "yay already installed, skipping..."
+fi
 
 # Install Hyprland ecosystem
 echo "Installing Hyprland and components..."
@@ -87,7 +100,7 @@ sudo pacman -S --needed --noconfirm \
     libvirt \
     virt-manager \
     qemu-full \
-    dnsmasq arc\
+    dnsmasq \
     dmidecode
 
 # Enable services (skip if already enabled)
@@ -120,6 +133,7 @@ flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flat
 
 flatpak install com.discordapp.Discord -y
 flatpak install app.zen_browser.zen -y
+
 # Install AUR helper (paru)
 echo "Installing AUR helper (paru)..."
 if ! command -v paru &> /dev/null; then
