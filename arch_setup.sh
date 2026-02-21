@@ -15,7 +15,6 @@ sudo pacman -Syu --noconfirm
 echo "Installing essential packages..."
 sudo pacman -S --needed --noconfirm \
     base-devel \
-    uwsm \
     git \
     grub \
     wget \
@@ -168,6 +167,27 @@ echo "adding proper user groups"
 sudo usermod -aG video $USER
 sudo usermod -aG input $USER
 sudo usermod -aG render $USER
+
+# Set $TERMINAL environment variable to alacritty
+echo "Setting TERMINAL environment variable..."
+if ! grep -q "TERMINAL" ~/.bashrc; then
+    echo 'export TERMINAL=alacritty' >> ~/.bashrc
+fi
+if ! grep -q "TERMINAL" ~/.bash_profile; then
+    echo 'export TERMINAL=alacritty' >> ~/.bash_profile
+fi
+
+# Autostart Hyprland on login to TTY1
+echo "Setting up Hyprland autostart on TTY1..."
+if ! grep -q "uwsm start hyprland" ~/.bash_profile; then
+    cat >> ~/.bash_profile << 'EOF'
+
+# Autostart Hyprland on TTY1
+if [ -z "$WAYLAND_DISPLAY" ] && [ "$(tty)" = "/dev/tty1" ]; then
+    exec uwsm start hyprland.desktop
+fi
+EOF
+fi
 
 
 echo "Installing keyboard config..."
