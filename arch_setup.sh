@@ -96,7 +96,6 @@ pacman_install obsidian
 pacman_install docker
 pacman_install ttf-roboto
 pacman_install ttf-jetbrains-mono
-pacman_install npm
 
 # -----------------------------------------------
 # Hyprland ecosystem
@@ -175,6 +174,24 @@ pacman_install virt-manager
 pacman_install qemu-full
 pacman_install dnsmasq
 pacman_install dmidecode
+
+# -----------------------------------------------
+# TTY1 Autologin (so hyprlock is the only login screen)
+# -----------------------------------------------
+echo ""
+echo "Setting up TTY1 autologin..."
+if [ -f /etc/systemd/system/getty@tty1.service.d/autologin.conf ]; then
+    echo "[SKIP] TTY1 autologin already configured"
+else
+    if [ -f "$HOME/Dot-Files/.config/dconf/autologin.conf" ]; then
+        sudo mkdir -p /etc/systemd/system/getty@tty1.service.d/
+        sudo cp "$HOME/Dot-Files/.config/dconf/autologin.conf" /etc/systemd/system/getty@tty1.service.d/autologin.conf
+        sudo systemctl daemon-reload
+        echo "[SET] TTY1 autologin configured"
+    else
+        echo "[SKIP] autologin.conf not found in Dot-Files repo"
+    fi
+fi
 
 # -----------------------------------------------
 # Enable services
@@ -334,8 +351,6 @@ else
     echo "[SKIP] install_betterdiscord.sh not found"
 fi
 
-echo "installing mcp hub"
-sudo npm install -g mcp-hub@latest
 # -----------------------------------------------
 # Done
 # -----------------------------------------------
