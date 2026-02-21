@@ -249,7 +249,6 @@ paru_install bluetuith
 paru_install uwsm
 paru_install devpod-bin
 paru_install apple-fonts
-paru_install otf-codenewroman-nerd
 
 # -----------------------------------------------
 # Dotfiles setup
@@ -307,6 +306,21 @@ fi
 echo ""
 echo "Installing keyboard config..."
 yay_install kanata-bin
+
+# Install kanata systemd service
+echo "Setting up kanata systemd service..."
+if systemctl is-enabled kanata.service &>/dev/null; then
+    echo "[SKIP] kanata service already enabled"
+else
+    if [ -f "$HOME/Dot-Files/.config/kanata/kanata.service" ]; then
+        sudo cp "$HOME/Dot-Files/.config/kanata/kanata.service" /etc/systemd/system/kanata.service
+        sudo systemctl daemon-reload
+        sudo systemctl enable --now kanata.service
+        echo "[SET] kanata service installed and enabled"
+    else
+        echo "[SKIP] kanata.service not found in Dot-Files repo"
+    fi
+fi
 
 # -----------------------------------------------
 # BetterDiscord
