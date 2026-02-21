@@ -184,10 +184,11 @@ if [ -f /etc/systemd/system/getty@tty1.service.d/autologin.conf ]; then
     echo "[SKIP] TTY1 autologin already configured"
 else
     if [ -f "$HOME/Dot-Files/.config/dconf/autologin.conf" ]; then
-        sudo mkdir -p /etc/systemd/system/getty@tty1.service.d/
+        sudo mkdir -p /etc/systemd/system/getty@tty1.service.d
         sudo cp "$HOME/Dot-Files/.config/dconf/autologin.conf" /etc/systemd/system/getty@tty1.service.d/autologin.conf
+        sudo sed -i "s/logan/$USER/g" /etc/systemd/system/getty@tty1.service.d/autologin.conf
         sudo systemctl daemon-reload
-        echo "[SET] TTY1 autologin configured"
+        echo "[SET] TTY1 autologin configured for $USER"
     else
         echo "[SKIP] autologin.conf not found in Dot-Files repo"
     fi
