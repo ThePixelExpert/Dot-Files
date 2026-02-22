@@ -1,0 +1,21 @@
+configuration {
+    modi:                   "drun,run,filebrowser";
+    show-icons:             true;
+    icon-theme:             "Papirus";
+    display-drun:           "";
+    display-run:            "";
+    display-filebrowser:    "";
+    drun-display-format:    "{name}\n<span size='small' alpha='60%'>{generic}</span>";
+    font:                   "CaskaydiaMono Nerd Font 14";
+    kb-cancel:              "Escape";
+    kb-row-down:            "Down";
+    kb-row-up:              "Up";
+    kb-accept-entry:        "Return,KP_Enter";
+    click-to-exit:          true;
+    steal-focus:            true;
+    matching:               "fuzzy";
+    sorting-method:         "fzf";
+    max-history-size:       25;
+}
+
+@theme "mytheme"
