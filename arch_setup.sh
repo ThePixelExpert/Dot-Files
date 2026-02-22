@@ -264,13 +264,11 @@ fi
 echo ""
 echo "Installing AUR packages..."
 paru_install impala
-paru_install walker
 paru_install bluetuith
 paru_install uwsm
 paru_install devpod-bin
 paru_install apple-fonts
 paru_install elephant
-paru_install walker
 
 # -----------------------------------------------
 # Dotfiles setup
