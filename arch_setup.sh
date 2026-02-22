@@ -96,6 +96,7 @@ pacman_install obsidian
 pacman_install docker
 pacman_install ttf-roboto
 pacman_install ttf-jetbrains-mono
+pacman_install rofi-wayland
 
 # -----------------------------------------------
 # Hyprland ecosystem
