@@ -1,0 +1,116 @@
+* {
+    background-color: #1a1b26;
+    text-color:       #c0caf5;
+    border:           0px;
+    margin:           0px;
+    padding:          0px;
+    spacing:          0px;
+    font:             "CaskaydiaMono Nerd Font 14";
+}
+
+window {
+    background-color: #1a1b26;
+    border-color:     #2e3050;
+    border-width:     1px;
+    border-radius:    12px;
+    padding:          8px;
+    width:            560px;
+}
+
+mainbox {
+    background-color: #1a1b26;
+    children:         [inputbar, listview];
+    spacing:          8px;
+    padding:          4px;
+}
+
+inputbar {
+    background-color: #16161e;
+    border-color:     #2e3050;
+    border-width:     1px;
+    border-radius:    8px;
+    padding:          10px 14px;
+    spacing:          8px;
+    children:         [prompt, entry];
+}
+
+prompt {
+    background-color: #16161e;
+    text-color:       #7aa2f7;
+    padding:          0px 4px 0px 0px;
+}
+
+entry {
+    background-color: #16161e;
+    text-color:       #c0caf5;
+    placeholder:      "Search…";
+    placeholder-color: #565f89;
+}
+
+listview {
+    background-color: #1a1b26;
+    columns:          1;
+    lines:            8;
+    scrollbar:        true;
+    spacing:          2px;
+    padding:          2px 0px;
+    fixed-height:     false;
+}
+
+element {
+    background-color: #1a1b26;
+    border-radius:    8px;
+    padding:          8px 10px;
+    spacing:          10px;
+    orientation:      horizontal;
+    children:         [element-icon, element-text];
+}
+
+element normal.normal {
+    background-color: #1a1b26;
+    text-color:       #c0caf5;
+}
+
+element selected.normal {
+    background-color: #1e2030;
+    border-color:     #7aa2f7;
+    border-width:     1px;
+    text-color:       #7aa2f7;
+}
+
+element alternate.normal {
+    background-color: #1a1b26;
+    text-color:       #c0caf5;
+}
+
+element-icon {
+    background-color: #1a1b26;
+    size:             20px;
+}
+
+element-text {
+    background-color: #1a1b26;
+    text-color:       inherit;
+    highlight:        bold #7aa2f7;
+}
+
+scrollbar {
+    background-color: #1a1b26;
+    handle-color:     #2e3050;
+    handle-width:     4px;
+    border-radius:    4px;
+    padding:          0px 2px;
+}
+
+message {
+    background-color: #16161e;
+    border-color:     #2e3050;
+    border-width:     1px;
+    border-radius:    8px;
+    padding:          10px 14px;
+}
+
+textbox {
+    background-color: #16161e;
+    text-color:       #565f89;
+}
