@@ -277,6 +277,7 @@ paru_install apple-fonts
 paru_install elephant
 paru_install otf-codenewroman-nerd
 
+sudo systemctl enable bluetoooth
 # -----------------------------------------------
 # Dotfiles setup
 # -----------------------------------------------
