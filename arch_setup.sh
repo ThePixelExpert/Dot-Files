@@ -273,6 +273,7 @@ paru_install uwsm
 paru_install devpod-bin
 paru_install apple-fonts
 paru_install elephant
+paru_install otf-codenewroman-nerd
 
 # -----------------------------------------------
 # Dotfiles setup
