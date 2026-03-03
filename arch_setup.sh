@@ -150,6 +150,8 @@ pacman_install pipewire
 pacman_install pipewire-audio
 pacman_install pipewire-pulse
 pacman_install wireplumber
+pacman_install pulsemixer
+pacman_install cava
 
 # -----------------------------------------------
 # Networking
