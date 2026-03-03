@@ -8,43 +8,47 @@ echo "Minimal Arch + Hyprland Setup"
 echo "================================"
 
 # -----------------------------------------------
+# Determine the real user (works whether run as root or via sudo)
+# -----------------------------------------------
+REAL_USER="${SUDO_USER:-$USER}"
+REAL_HOME=$(eval echo "~$REAL_USER")
+echo "Running as: $USER | Real user: $REAL_USER | Home: $REAL_HOME"
+
+# -----------------------------------------------
 # Helper functions
 # -----------------------------------------------
 
-# Install a pacman package only if not already installed
 pacman_install() {
     local pkg=$1
     if pacman -Qi "$pkg" &>/dev/null; then
         echo "[SKIP] $pkg is already installed"
     else
         echo "[INSTALL] $pkg"
-        sudo pacman -S --needed --noconfirm "$pkg"
+        pacman -S --needed --noconfirm "$pkg"
     fi
 }
 
-# Install an AUR package via paru only if not already installed
+# Run makepkg-based installs as the real (non-root) user
 paru_install() {
     local pkg=$1
     if pacman -Qi "$pkg" &>/dev/null; then
         echo "[SKIP] $pkg is already installed"
     else
         echo "[INSTALL] $pkg (AUR)"
-        paru -S --needed --noconfirm "$pkg"
+        sudo -u "$REAL_USER" paru -S --needed --noconfirm "$pkg"
     fi
 }
 
-# Install an AUR package via yay only if not already installed
 yay_install() {
     local pkg=$1
     if pacman -Qi "$pkg" &>/dev/null; then
         echo "[SKIP] $pkg is already installed"
     else
         echo "[INSTALL] $pkg (AUR/yay)"
-        yay -S --needed --noconfirm "$pkg"
+        sudo -u "$REAL_USER" yay -S --needed --noconfirm "$pkg"
     fi
 }
 
-# Install a flatpak only if not already installed
 flatpak_install() {
     local app_id=$1
     if flatpak list --app | grep -q "$app_id"; then
@@ -59,7 +63,7 @@ flatpak_install() {
 # Update system
 # -----------------------------------------------
 echo "Updating system..."
-sudo pacman -Syu --noconfirm
+pacman -Syu --noconfirm
 
 # -----------------------------------------------
 # Install yay (AUR helper) from source
@@ -71,11 +75,29 @@ if command -v yay &>/dev/null; then
 else
     echo "[INSTALL] yay"
     cd /tmp
-    sudo rm -rf yay
+    rm -rf yay
     git clone https://aur.archlinux.org/yay.git
-    sudo chmod -R 755 yay
+    chown -R "$REAL_USER":"$REAL_USER" yay
     cd yay
-    makepkg -si --noconfirm
+    sudo -u "$REAL_USER" makepkg -si --noconfirm
+    cd ~
+fi
+
+# -----------------------------------------------
+# Install paru (AUR helper) — installed early so paru_install() works below
+# -----------------------------------------------
+echo ""
+echo "Checking paru AUR helper..."
+if command -v paru &>/dev/null || pacman -Qi paru &>/dev/null; then
+    echo "[SKIP] paru is already installed"
+else
+    echo "[INSTALL] paru"
+    cd /tmp
+    rm -rf paru
+    git clone https://aur.archlinux.org/paru.git
+    chown -R "$REAL_USER":"$REAL_USER" paru
+    cd paru
+    sudo -u "$REAL_USER" makepkg -si --noconfirm
     cd ~
 fi
 
@@ -184,12 +206,12 @@ echo "Setting up TTY1 autologin..."
 if [ -f /etc/systemd/system/getty@tty1.service.d/autologin.conf ]; then
     echo "[SKIP] TTY1 autologin already configured"
 else
-    if [ -f "$HOME/Dot-Files/.config/dconf/autologin.conf" ]; then
-        sudo mkdir -p /etc/systemd/system/getty@tty1.service.d
-        sudo cp "$HOME/Dot-Files/.config/dconf/autologin.conf" /etc/systemd/system/getty@tty1.service.d/autologin.conf
-        sudo sed -i "s/logan/$USER/g" /etc/systemd/system/getty@tty1.service.d/autologin.conf
-        sudo systemctl daemon-reload
-        echo "[SET] TTY1 autologin configured for $USER"
+    if [ -f "$REAL_HOME/Dot-Files/.config/dconf/autologin.conf" ]; then
+        mkdir -p /etc/systemd/system/getty@tty1.service.d
+        cp "$REAL_HOME/Dot-Files/.config/dconf/autologin.conf" /etc/systemd/system/getty@tty1.service.d/autologin.conf
+        sed -i "s/logan/$REAL_USER/g" /etc/systemd/system/getty@tty1.service.d/autologin.conf
+        systemctl daemon-reload
+        echo "[SET] TTY1 autologin configured for $REAL_USER"
     else
         echo "[SKIP] autologin.conf not found in Dot-Files repo"
     fi
@@ -200,13 +222,13 @@ fi
 # -----------------------------------------------
 echo ""
 echo "Enabling essential services..."
-sudo systemctl enable NetworkManager 2>/dev/null || echo "[SKIP] NetworkManager already enabled"
+systemctl enable NetworkManager 2>/dev/null || echo "[SKIP] NetworkManager already enabled"
 
 echo "Enabling virtualization services..."
-sudo systemctl enable libvirtd.service 2>/dev/null || echo "[SKIP] libvirtd already enabled"
-sudo systemctl enable virtlogd.service 2>/dev/null || echo "[SKIP] virtlogd already enabled"
-sudo systemctl start libvirtd.service 2>/dev/null || echo "[SKIP] libvirtd already running"
-sudo systemctl start virtlogd.service 2>/dev/null || echo "[SKIP] virtlogd already running"
+systemctl enable libvirtd.service 2>/dev/null || echo "[SKIP] libvirtd already enabled"
+systemctl enable virtlogd.service 2>/dev/null || echo "[SKIP] virtlogd already enabled"
+systemctl start libvirtd.service 2>/dev/null || echo "[SKIP] libvirtd already running"
+systemctl start virtlogd.service 2>/dev/null || echo "[SKIP] virtlogd already running"
 
 # -----------------------------------------------
 # User groups
@@ -214,11 +236,11 @@ sudo systemctl start virtlogd.service 2>/dev/null || echo "[SKIP] virtlogd alrea
 echo ""
 echo "Configuring user groups..."
 for group in libvirt video input render; do
-    if groups $USER | grep -qw "$group"; then
-        echo "[SKIP] $USER already in $group group"
+    if groups "$REAL_USER" | grep -qw "$group"; then
+        echo "[SKIP] $REAL_USER already in $group group"
     else
-        echo "[ADD] Adding $USER to $group group"
-        sudo usermod -aG "$group" $USER
+        echo "[ADD] Adding $REAL_USER to $group group"
+        usermod -aG "$group" "$REAL_USER"
     fi
 done
 
@@ -227,8 +249,8 @@ done
 # -----------------------------------------------
 echo ""
 echo "Configuring libvirt default network..."
-sudo virsh net-autostart default 2>/dev/null || echo "[SKIP] Default network already set to autostart"
-sudo virsh net-start default 2>/dev/null || echo "[SKIP] Default network already started"
+virsh net-autostart default 2>/dev/null || echo "[SKIP] Default network already set to autostart"
+virsh net-start default 2>/dev/null || echo "[SKIP] Default network already started"
 
 # -----------------------------------------------
 # Flatpak
@@ -239,24 +261,6 @@ flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flat
 
 flatpak_install com.discordapp.Discord
 flatpak_install app.zen_browser.zen
-
-# -----------------------------------------------
-# Install paru (AUR helper)
-# -----------------------------------------------
-echo ""
-echo "Checking paru AUR helper..."
-if command -v paru &>/dev/null || pacman -Qi paru &>/dev/null; then
-    echo "[SKIP] paru is already installed"
-else
-    echo "[INSTALL] paru"
-    cd /tmp
-    sudo rm -rf paru
-    git clone https://aur.archlinux.org/paru.git
-    sudo chmod -R 755 paru
-    cd paru
-    makepkg -si --noconfirm
-    cd ~
-fi
 
 # -----------------------------------------------
 # AUR packages via paru
@@ -274,13 +278,22 @@ paru_install elephant
 # Dotfiles setup
 # -----------------------------------------------
 echo ""
-cd ~/Dot-Files
+if [ -d "$REAL_HOME/Dot-Files" ]; then
+    cd "$REAL_HOME/Dot-Files"
 
-echo "Installing wal for Beach BG..."
-if command -v wal &>/dev/null; then
-    wal -i .config/assets/Beach-BG.jpg
+    echo "Installing wal for Beach BG..."
+    BG_IMG="$REAL_HOME/Dot-Files/.config/assets/Beach-BG.jpg"
+    if [ -f "$BG_IMG" ]; then
+        if command -v wal &>/dev/null; then
+            sudo -u "$REAL_USER" wal -i "$BG_IMG"
+        else
+            echo "[SKIP] wal not found, skipping wallpaper setup"
+        fi
+    else
+        echo "[SKIP] Beach-BG.jpg not found at $BG_IMG"
+    fi
 else
-    echo "[SKIP] wal not found, skipping wallpaper setup"
+    echo "[SKIP] Dot-Files directory not found at $REAL_HOME/Dot-Files"
 fi
 
 # -----------------------------------------------
@@ -288,17 +301,17 @@ fi
 # -----------------------------------------------
 echo ""
 echo "Setting TERMINAL environment variable..."
-if grep -q "export TERMINAL" ~/.bashrc; then
+if grep -q "export TERMINAL" "$REAL_HOME/.bashrc"; then
     echo "[SKIP] TERMINAL already set in .bashrc"
 else
-    echo 'export TERMINAL=alacritty' >> ~/.bashrc
+    echo 'export TERMINAL=alacritty' >> "$REAL_HOME/.bashrc"
     echo "[SET] TERMINAL=alacritty added to .bashrc"
 fi
 
-if grep -q "export TERMINAL" ~/.bash_profile; then
+if grep -q "export TERMINAL" "$REAL_HOME/.bash_profile"; then
     echo "[SKIP] TERMINAL already set in .bash_profile"
 else
-    echo 'export TERMINAL=alacritty' >> ~/.bash_profile
+    echo 'export TERMINAL=alacritty' >> "$REAL_HOME/.bash_profile"
     echo "[SET] TERMINAL=alacritty added to .bash_profile"
 fi
 
@@ -307,10 +320,10 @@ fi
 # -----------------------------------------------
 echo ""
 echo "Setting up Hyprland autostart on TTY1..."
-if grep -q "uwsm start hyprland" ~/.bash_profile; then
+if grep -q "uwsm start hyprland" "$REAL_HOME/.bash_profile"; then
     echo "[SKIP] Hyprland autostart already configured"
 else
-    cat >> ~/.bash_profile << 'EOF'
+    cat >> "$REAL_HOME/.bash_profile" << 'EOF'
 
 # Autostart Hyprland on TTY1
 if [ -z "$WAYLAND_DISPLAY" ] && [ "$(tty)" = "/dev/tty1" ]; then
@@ -327,15 +340,14 @@ echo ""
 echo "Installing keyboard config..."
 yay_install kanata-bin
 
-# Install kanata systemd service
 echo "Setting up kanata systemd service..."
 if systemctl is-enabled kanata.service &>/dev/null; then
     echo "[SKIP] kanata service already enabled"
 else
-    if [ -f "$HOME/Dot-Files/.config/kanata/kanata.service" ]; then
-        sudo cp "$HOME/Dot-Files/.config/kanata/kanata.service" /etc/systemd/system/kanata.service
-        sudo systemctl daemon-reload
-        sudo systemctl enable --now kanata.service
+    if [ -f "$REAL_HOME/Dot-Files/.config/kanata/kanata.service" ]; then
+        cp "$REAL_HOME/Dot-Files/.config/kanata/kanata.service" /etc/systemd/system/kanata.service
+        systemctl daemon-reload
+        systemctl enable --now kanata.service
         echo "[SET] kanata service installed and enabled"
     else
         echo "[SKIP] kanata.service not found in Dot-Files repo"
@@ -347,8 +359,8 @@ fi
 # -----------------------------------------------
 echo ""
 echo "Installing Better Discord and themes..."
-if [ -f ./install_betterdiscord.sh ]; then
-    ./install_betterdiscord.sh
+if [ -f "$REAL_HOME/Dot-Files/install_betterdiscord.sh" ]; then
+    bash "$REAL_HOME/Dot-Files/install_betterdiscord.sh"
 else
     echo "[SKIP] install_betterdiscord.sh not found"
 fi
