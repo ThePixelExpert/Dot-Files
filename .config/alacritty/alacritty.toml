@@ -10,7 +10,7 @@ general.import = [
 normal = { family = "CaskaydiaMono Nerd Font", style = "Regular" }
 bold = { family = "CaskaydiaMono Nerd Font", style = "Bold" }
 italic = { family = "CaskaydiaMono Nerd Font", style = "Italic" }
-size = 9
+size = 12
 
 [env]
 TERM = "xterm-256color"
@@ -22,11 +22,10 @@ decorations = "Full"
 opacity = 0.4
 blur = true
 
-[keyboard]
-bindings = [
-{ key = "F11", action = "ToggleFullscreen" }
-]
 
 
 
-
+[[keyboard.bindings]]
+key = "Return"
+mods = "Shift"
+chars = "\u001B\r"
